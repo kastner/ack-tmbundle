@@ -91,13 +91,14 @@ class AckInProject::Search
     AckInProject.update_search_history result['returnArgument']
     AckInProject.update_pbfind result['returnArgument']
 
-    %{cd #{e_sh search_directory}; #{e_sh ack} #{options.join(' ')} -- #{e_sh result['returnArgument']}}
+    %{cd #{e_sh search_directory}; #{e_sh ack} #{options.join(' ')} #{ result['returnArgument']}}
   end
   
   def search
     # tell ack about potential .ackrc files in the project directory
     ENV['ACKRC'] = File.join(project_directory, '.ackrc')
     
+    puts "Command: #{prepare_search}"
     IO.popen(prepare_search) do |pipe|
       pipe.each do |line|
         case line
